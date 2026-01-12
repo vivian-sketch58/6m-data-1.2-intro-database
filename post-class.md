@@ -45,13 +45,13 @@ Answer:
 
 *These topics are optional but recommended for those pursuing Data Engineering.*
 
-### ** Referential Integrity**
+### **Referential Integrity**
 
 A deeper look at ON DELETE CASCADE vs ON DELETE SET NULL.
 
 * **Challenge:** If you delete a Teacher, what happens to the Students?
 
-### ** Data Types Cheat Sheet**
+### **Data Types Cheat Sheet**
 
 | Type | Use Case |
 | :---- | :---- |
@@ -61,7 +61,7 @@ A deeper look at ON DELETE CASCADE vs ON DELETE SET NULL.
 | DATETIME | Timestamps. |
 | BOOLEAN | IsActive, HasPaid. |
 
-### ** Self-Study Assignment: The Music Streamer**
+### **Self-Study Assignment: The Music Streamer**
 
 Design a schema for a Spotify-clone. How do you handle a "Many-to-Many" relationship between Songs and Playlists?  
 (Hint: You will need a "Junction Table" in the middle\!) 
@@ -69,7 +69,7 @@ Design a schema for a Spotify-clone. How do you handle a "Many-to-Many" relation
 ## **💡Please Share Your Answers & Thoughts in Discord💡**
 
 
-# Other Reference Material for Self-Study
+## Other Reference Material for Self-Study
 
 ### Foundation
 
