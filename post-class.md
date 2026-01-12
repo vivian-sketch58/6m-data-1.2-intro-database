@@ -1,69 +1,148 @@
-# Assignment
+# **🚀 Advanced Challenge: Architecting "FoodFast"**
 
-## Brief
+Topic: Complex Relationships & Data Integrity
 
-Create an ERD for each of the following case study question.
+Estimated Time: 45–60 Minutes
 
-## Instructions
+## **🌯 The Scenario**
 
-Paste the answer as DBML in the answer code section below each question.
+You have been hired as the Lead Backend Engineer for "FoodFast," a new competitor to UberEats/DoorDash.
 
-### Question 1
+The CEO has given you a messy set of requirements on a napkin. Your job is to turn this into a robust Database Schema using dbdiagram.io.
 
-Construct an ERD for a social media company whose database includes information about users, their followers, and the posts that they make. Users can follow multiple users and create multiple posts.
+### **The Requirements**
 
-Each entity has the following attributes:
+1. **Users:** We have customers who have a Name, Email, and *multiple* saved delivery addresses (Home, Work, etc.).  
+2. **Restaurants:** Establishments have a Name, Cuisine Type, and Rating.  
+3. **The Menu:** Each restaurant has many Menu Items (e.g., "Burger", "Fries"). Items have a Name and a Price.  
+4. **Couriers:** Drivers have a Name and Vehicle Type (Bike, Car).  
+5. **Orders:**  
+   * An order belongs to **one** Customer.  
+   * An order is picked up by **one** Courier.  
+   * An order comes from **one** Restaurant.  
+   * **CRITICAL:** An order can contain **many** Menu Items (e.g., 2 Burgers \+ 1 Fry).
 
-- User: id, username, email, created_at
-- Post: id, title, body, user_id, status, created_at
-- Follows: following_user_id, followed_user_id, created_at
+## **🧠 Challenge 1: The "Many-to-Many" Problem**
 
-Answer:
+In the basic lesson, we learned One-to-Many (One Customer \-\> Many Cars).
 
+However, an Order contains Many Items, and a specific Item (like "Cheeseburger") appears in Many Orders.
+
+Task:
+
+You cannot simply put item\_id in the Orders table (because you might buy 5 items).
+
+You cannot put order\_id in the Items table (because the item is sold to thousands of people).
+
+Solution Required:
+
+Create a Junction Table (often called order\_items or order\_details) to sit between Orders and Menu Items.
+
+## **🕵️ Challenge 2: The "History" Problem (Normalization Trap)**
+
+**Scenario:**
+
+1. On Monday, John buys a "Big Mac" for **$5.00**.  
+2. On Tuesday, the Restaurant raises the price of the "Big Mac" to **$6.00**.  
+3. On Wednesday, John looks at his receipt from Monday.
+
+The Question:
+
+If your database schema just links to the menu\_items table for the price, John's receipt will now say he paid $6.00 on Monday. This is illegal (fraud).
+
+Task:
+
+Modify your schema to ensure that even if the Restaurant updates the Menu Item price, the historic Order Record remains accurate to what was actually paid at that moment.
+
+## **🔮 Challenge 3: Looking Ahead to SQL (DDL)**
+
+In our next lesson, we will write the code to actually create these tables.
+
+dbdiagram.io has a magic feature.
+
+1. Build your diagram.  
+2. Look for the **"Export"** function (often "Export to PostgreSQL" or "Export to MySQL").  
+3. Generate the SQL code.
+
+Task:
+
+Paste the generated code for your Users table below. Try to read it.
+
+* What does NOT NULL mean?  
+* What does DEFAULT mean?  
+* Bring 2 questions about this syntax to the next class.
+
+
+## **✅ Solution Key (Don't peek until you try\!)**
+<details>
+
+  <summary>DBML Code Solution</summary>
+  
 ```dbml
+Table users {
+  id int [pk, increment]
+  name varchar
+  email varchar
+}
 
+// 1. One User has Many Addresses
+Table addresses {
+  id int [pk]
+  user_id int
+  street varchar
+  city varchar
+  type varchar // 'Home', 'Work'
+}
+
+Table restaurants {
+  id int [pk]
+  name varchar
+  cuisine varchar
+}
+
+Table menu_items {
+  id int [pk]
+  restaurant_id int
+  name varchar
+  current_price decimal // This is the price TODAY
+}
+
+Table couriers {
+  id int [pk]
+  name varchar
+  vehicle varchar
+}
+
+Table orders {
+  id int [pk]
+  user_id int
+  courier_id int
+  restaurant_id int
+  order_time datetime
+  total_price decimal
+}
+
+// THE JUNCTION TABLE (Many-to-Many Resolver)
+Table order_items {
+  id int [pk]
+  order_id int
+  menu_item_id int
+  quantity int      // How many did they buy?
+  
+  // THE FIX FOR CHALLENGE 2:
+  // We copy the price at the moment of purchase into this table.
+  price_at_purchase decimal 
+}
+
+// Relationships
+Ref: addresses.user_id > users.id
+Ref: menu_items.restaurant_id > restaurants.id
+Ref: orders.user_id > users.id
+Ref: orders.courier_id > couriers.id
+Ref: orders.restaurant_id > restaurants.id
+
+// Linking the Junction Table
+Ref: order_items.order_id > orders.id
+Ref: order_items.menu_item_id > menu_items.id
 ```
-
-### Question 2
-
-Construct an ERD for a company that sells books online. The company has a website where customers can browse available books and add them to their shopping carts. Each cart can contain multiple books.
-
-There are 4 entities, think of what attributes each entity should have.
-
-- Customer
-- Book
-- Cart
-- CartItem
-
-Answer:
-
-```dbml
-
-```
-
-## **Post-Class: Deep Dive (Advanced Learners)**
-
-*These topics are optional but recommended for those pursuing Data Engineering.*
-
-### **Referential Integrity**
-
-A deeper look at ON DELETE CASCADE vs ON DELETE SET NULL.
-
-* **Challenge:** If you delete a Teacher, what happens to the Students?
-
-### **Data Types Cheat Sheet**
-
-| Type | Use Case |
-| :---- | :---- |
-| INT | Counts, IDs. |
-| VARCHAR | Names, Short descriptions. |
-| TEXT | Long comments, blogs. |
-| DATETIME | Timestamps. |
-| BOOLEAN | IsActive, HasPaid. |
-
-### **Self-Study Assignment: The Music Streamer**
-
-Design a schema for a Spotify-clone. How do you handle a "Many-to-Many" relationship between Songs and Playlists?  
-(Hint: You will need a "Junction Table" in the middle\!) 
-
-## **💡Please Share Your Answers & Thoughts in Discord💡**
+</details>
