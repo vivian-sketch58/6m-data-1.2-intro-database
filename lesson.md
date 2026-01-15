@@ -150,13 +150,33 @@ Table cars {
 Ref: cars.customer_id > customers.id 
 
 
-// --- 🟢 STUDENT CHALLENGE ---
+// --- 🟢 CHALLENGE ---
 // Task: Add an 'accidents' table below.
 // Requirements:
 // 1. Accidents have a date, location, and description.
 // 2. An accident happens to a specific CAR.
 // 3. Link the accident to the car.
 ```
+### **Solution**
+
+<details>
+
+  <summary>Click here to view solution</summary>
+
+#### **Activity 2.2.1**
+```dbml
+Table accidents {
+  id int [pk, increment]
+  date datetime
+  location varchar
+  description text
+  
+  car_id int // FK pointing to the car
+}
+Ref: accidents.car_id > cars.id
+```
+</details>
+
 
 ### **🟢 Activity 2.2.2: School System (10 Mins)**
 
@@ -171,10 +191,9 @@ Each entity has the following attributes:
 > Write the DBML to create the ERD.
 
 ```dbml
-// Activity 2.2.2
 // Your code here
 ```
-
+Submit your code in Discord Peer-Review Channel: https://discord.com/channels/1165846570177150996/1457586759667028094
 
 ## **🔵 Section 3: Normalization (Cleaning the House) (50 Mins)**
 
