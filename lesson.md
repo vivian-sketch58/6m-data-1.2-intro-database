@@ -26,7 +26,7 @@ By the end of this session, learners will be able to:
 | **2:50 \- 3:00** | **Wrap Up** | **Synthesize** | Q\&A, Next Steps. |  |
 
 ---
-## **🔵 Section 1: The Landscape of Data (50 Mins)**
+## **🔵 Section 1: The Landscape of Data**
 
 **Goal:** Demystify databases and establish why SQL is the standard for structured data.
 
@@ -66,7 +66,7 @@ Here are the common data types, every database has its own set of data types.
 | `BOOLEAN`  | True or false.             |
 
 
-### **🟢 Activity 1: The Sorting Game (15 Mins)**
+### **🟢 Activity 1: The Sorting Game (10 Mins)**
 
 Type: Class Discussion / Quick Poll
 
@@ -96,7 +96,7 @@ Prompt: "I am the CEO of a new Startup. I have 4 features I need to build. Tell 
      NoSQL. High volume, simple structure.
    </details>
 
-## **🔵 Section 2: Building the Blueprint (ERD) (50 Mins)**
+## **🔵 Section 2: Building the Blueprint (ERD)**
 
 **Goal:** Learn the syntax of relationships using DBML.
 
@@ -178,7 +178,7 @@ Ref: accidents.car_id > cars.id
 </details>
 
 
-### **🟢 Workshop 2.2.2 : School System (10 Mins)**
+### **🟢 Workshop 2.2.2 : School System (15 Mins)**
 
 Construct an ERD for a school system whose classes have students and teachers. Each student belongs to a single class. Each teacher may teach more than one class, and each class may have more than one teacher.
 
@@ -191,7 +191,7 @@ Each entity has the following attributes:
 * Write the DBML to create the ERD.
 * Submit your code in Discord Peer-Review Channel: https://discord.com/channels/1165846570177150996/1457586759667028094
 
-## **🔵 Section 3: Normalization (Cleaning the House) (50 Mins)**
+## **🔵 Section 3: Normalization (Cleaning the House)**
 
 **Goal:** Convert messy data into efficient tables using Normal Forms.
 
@@ -225,8 +225,7 @@ The `OrderDetails` table is in 1NF because each row is unique and each column ha
 | 300     | 10     | iPhone   | 1000      | 2          | Mary         | 2021-01-03 |
 | 300     | 30     | Macbook  | 2000      | 2          | Mary         | 2021-01-03 |
 
-The problem is that now we don’t have a unique primary key. That is, 100 occurs in
-the `OrderID` column in two different rows.
+The problem is that now we don’t have a unique primary key. That is, 100 occurs in the `OrderID` column in two different rows.
 
 To create a unique primary (composite) key, let's number the lines in each order by adding a new column called `LineNumber`.
 
@@ -288,7 +287,7 @@ We have a messy table called `OrderLineItems`. It violates 3NF because `ItemName
 ## **🏁 Wrap Up (10 Mins)**
 
 1. **Review Objectives:** Did we choose the right database? Did we build an ERD? Did we normalize a table?  
-2. **Homework:** Take a screenshot of an app you use (e.g., Instagram, Spotify) and try to draw the ERD for just one screen.  
+2. **Homework:** [Post-Class](./post-class.md)  
 3. **Next Session Teaser:** "Now that we have our Blueprint, next week we actually start building the house using SQL CREATE and SELECT commands."
 
 
