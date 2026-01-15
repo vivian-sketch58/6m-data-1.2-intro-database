@@ -146,3 +146,74 @@ Ref: order_items.order_id > orders.id
 Ref: order_items.menu_item_id > menu_items.id
 ```
 </details>
+
+---
+## **📖Post Class Reading**
+### **3.3 Synthesis** 
+
+### Instructor Prompt
+
+> Our tables are now fully normalised. But let’s explore the following situations:
+>
+> **Step 1 – Historical Accuracy:**
+> Imagine the iPhone’s price increases to $1200 next year.
+>
+> * What happens if we try to calculate last year’s revenue from our tables?
+> * How does full normalisation affect historical reporting?
+>
+> **Step 2 – Query Complexity:**
+> Assuming we **did store historical prices**, how easy is it to answer questions like ‘Total revenue by product last year’ using only fully normalised tables?
+>
+> * Consider the joins you would need and how this scales with large datasets.
+
+### Learner Goal
+
+Understand the trade-offs of full normalisation:
+
+<details>
+<summary>1. Structural correctness ✅</summary>
+
+* Fully normalised tables store each fact in exactly one place.
+* Example: No duplicate customers, consistent foreign key references, each order linked to the correct items.
+* **Why it matters:** Ensures entity relationships remain consistent, and avoids wasting storage on redundant or repeated data.
+
+</details>
+
+<details>
+<summary>2. Historical accuracy ⚠️</summary>
+
+* Fully normalised tables reference **current descriptive data**.
+* Updating `ItemPrice` in the `Items` table changes join results, so past revenues can appear wrong.
+* **Example:** Joining `Orders → OrderLineItems → Items` today gives $1200 for last year’s iPhone, even though it was sold for $1000.
+
+</details>
+
+<details>
+<summary>3. Query efficiency ⚠️</summary>
+
+* Analytical questions often require joining multiple tables.
+* **Example:** To calculate “total revenue by product last year” (assuming historical prices are stored), we need to join `Orders → OrderLineItems → Items` for every row.
+* Large datasets + multiple joins → slower queries and more complex SQL.
+
+</details>
+
+<details>
+<summary>4. Controlled denormalisation</summary>
+
+* To solve these practical issues, systems often **store slowly changing descriptive data directly in transactions**:
+
+  * Example: `sold_price`, `Product category`, `Brand` at time of sale.
+
+* **Benefits:**
+
+  * Preserves historical revenue and product context.
+  * Reduces joins → faster queries.
+  * Simplifies analytics and reporting.
+
+</details>
+
+### Key Takeaways
+
+1. **Normalisation ensures structural correctness.**
+2. **Controlled denormalisation preserves history and improves performance.**
+3. **Good data design balances integrity with practical business needs.**
