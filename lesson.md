@@ -75,13 +75,13 @@ Prompt: "I am the CEO of a new Startup. I have 4 features I need to build. Tell 
 1. **User Profile Pictures:** 
     <details>
       <summary>Answer: </summary>
-      NoSQL/Object Store for the image binary, or SQL for the *file path*.
+      NoSQL/Object Store for the image binary, or SQL for the file path.
     </details>
 
 2. **Payment Processing:**  
    <details>
      <summary>Answer: </summary>
-     SQL. We need ACID compliance/Transactions.
+     SQL. We need ACID (Atomicity, Consistency, Isolation, and Durability) compliance/Transactions.
    </details>
 
 3. **"Find me songs that sound like Jazz":** 
