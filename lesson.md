@@ -1,4 +1,4 @@
-# **📘 Lesson Plan: Data Modeling & Schema Design (3 Hours)**
+# **📘 Lesson Plan: Data Modeling & Schema Design**
 
 Module: 1.2 Data Modeling
 
@@ -26,7 +26,7 @@ By the end of this session, learners will be able to:
 | **2:50 \- 3:00** | **Wrap Up** | **Synthesize** | Q\&A, Next Steps. |  |
 
 ---
-## **🔵 Section 1: The Landscape of Data (50 Mins)**
+## **🔵 Section 1: The Landscape of Data**
 
 **Goal:** Demystify databases and establish why SQL is the standard for structured data.
 
@@ -66,7 +66,7 @@ Here are the common data types, every database has its own set of data types.
 | `BOOLEAN`  | True or false.             |
 
 
-### **🟢 Activity 1: The Sorting Game (15 Mins)**
+### **🟢 Activity 1: The Sorting Game (10 Mins)**
 
 Type: Class Discussion / Quick Poll
 
@@ -75,13 +75,13 @@ Prompt: "I am the CEO of a new Startup. I have 4 features I need to build. Tell 
 1. **User Profile Pictures:** 
     <details>
       <summary>Answer: </summary>
-      NoSQL/Object Store for the image binary, or SQL for the *file path*.
+      NoSQL/Object Store for the image binary, or SQL for the file path.
     </details>
 
 2. **Payment Processing:**  
    <details>
      <summary>Answer: </summary>
-     SQL. We need ACID compliance/Transactions.
+     SQL. We need ACID (Atomicity, Consistency, Isolation, and Durability) compliance/Transactions.
    </details>
 
 3. **"Find me songs that sound like Jazz":** 
@@ -96,7 +96,7 @@ Prompt: "I am the CEO of a new Startup. I have 4 features I need to build. Tell 
      NoSQL. High volume, simple structure.
    </details>
 
-## **🔵 Section 2: Building the Blueprint (ERD) (50 Mins)**
+## **🔵 Section 2: Building the Blueprint (ERD)**
 
 **Goal:** Learn the syntax of relationships using DBML.
 
@@ -108,7 +108,7 @@ The glue that holds this blueprint together is the **ID**.
 
 ### **2.2 Concept: The Keys**
 
-1. **Primary Key (PK):** The unique social security number of a row.  
+1. **Primary Key (PK):** The unique NRIC number of a row.  
    * *Rule:* It creates identity. If two rows have the same PK, the database explodes (throws an error).  
 2. **Foreign Key (FK):** The reference pointing to someone else's PK.  
    * *Rule:* It creates relationships. "I belong to that person over there."
@@ -150,33 +150,48 @@ Table cars {
 Ref: cars.customer_id > customers.id 
 
 
-// --- 🟢 STUDENT CHALLENGE ---
+// --- 🟢 CHALLENGE ---
 // Task: Add an 'accidents' table below.
 // Requirements:
 // 1. Accidents have a date, location, and description.
 // 2. An accident happens to a specific CAR.
 // 3. Link the accident to the car.
 ```
+### **Solution**
 
-### **🟢 Activity 2.2.2: School System (10 Mins)**
+<details>
+
+  <summary>Click here to view solution</summary>
+
+#### **Activity 2.2.1**
+```dbml
+Table accidents {
+  id int [pk, increment]
+  date datetime
+  location varchar
+  description text
+  
+  car_id int // FK pointing to the car
+}
+Ref: accidents.car_id > cars.id
+```
+</details>
+
+
+### **🟢 Workshop 2.2.2 : School System (15 Mins)**
 
 Construct an ERD for a school system whose classes have students and teachers. Each student belongs to a single class. Each teacher may teach more than one class, and each class may have more than one teacher.
 
 Each entity has the following attributes:
 
-- Student: id, name, address, phone, email, class_id
-- Teacher: id, name, address, phone, email
-- Class: id, name, teacher_id
+> - Student: id, name, address, phone, email, class_id
+> - Teacher: id, name, address, phone, email
+> - Class: id, name, teacher_id
 
-> Write the DBML to create the ERD.
+* Write the DBML to create the ERD.
+* Submit your code in Discord Peer-Review Channel: https://discord.com/channels/1165846570177150996/1457586759667028094
 
-```dbml
-// Activity 2.2.2
-// Your code here
-```
-
-
-## **🔵 Section 3: Normalization (Cleaning the House) (50 Mins)**
+## **🔵 Section 3: Normalization (Cleaning the House)**
 
 **Goal:** Convert messy data into efficient tables using Normal Forms.
 
@@ -210,8 +225,7 @@ The `OrderDetails` table is in 1NF because each row is unique and each column ha
 | 300     | 10     | iPhone   | 1000      | 2          | Mary         | 2021-01-03 |
 | 300     | 30     | Macbook  | 2000      | 2          | Mary         | 2021-01-03 |
 
-The problem is that now we don’t have a unique primary key. That is, 100 occurs in
-the `OrderID` column in two different rows.
+The problem is that now we don’t have a unique primary key. That is, 100 occurs in the `OrderID` column in two different rows.
 
 To create a unique primary (composite) key, let's number the lines in each order by adding a new column called `LineNumber`.
 
@@ -255,89 +269,25 @@ To fix this, we need to split the table into two tables: `Orders` and `OrderLine
 
 We have a messy table called `OrderLineItems`. It violates 3NF because `ItemName` and `ItemPrice` depend on `ItemID`, not on the specific order. This is a transitive dependency. A transitive dependency is when one or more columns in a table depend on a non-key column in that table.
 
-**Task: Let's break `OrderLineItems` into two tables: `OrderLineItems` and `Items`.**
+### **🟢 Workshop 3.2.3: Let's break `OrderLineItems` into two tables: `OrderLineItems` and `Items`.**
 
-Using [dbdiagram.io](https://dbdiagram.io/d), learners decompose this into two clean tables: OrderLineItems and Items.
+> Using [dbdiagram.io](https://dbdiagram.io/d), learners decompose this into two clean tables: OrderLineItems and Items.
 
-```dbml
-// Activity 3.2.3
-// Your code here
-```
+* Write the DBML to create the ERD.
+* Submit your code in Discord Peer-Review Channel: https://discord.com/channels/1165846570177150996/1457586759667028094
 
 
 ### **3.3 Synthesis & Discussion**
 
-### Instructor Prompt
+* **Instructor:** "In our solution, if the price of the iPhone goes up to $1200 next year, does the old order history change?"  
+* **Learner Goal:** Realize that while Normalization is good, sometimes we *denormalize* (copy data) like sold\_price to preserve historical accuracy.
+* [More in Post-Class](./post-class.md)
 
-> Our tables are now fully normalised. But let’s explore the following situations:
->
-> **Step 1 – Historical Accuracy:**
-> Imagine the iPhone’s price increases to $1200 next year.
->
-> * What happens if we try to calculate last year’s revenue from our tables?
-> * How does full normalisation affect historical reporting?
->
-> **Step 2 – Query Complexity:**
-> Assuming we **did store historical prices**, how easy is it to answer questions like ‘Total revenue by product last year’ using only fully normalised tables?
->
-> * Consider the joins you would need and how this scales with large datasets.
-
-### Learner Goal
-
-Understand the trade-offs of full normalisation:
-
-<details>
-<summary>1. Structural correctness ✅</summary>
-
-* Fully normalised tables store each fact in exactly one place.
-* Example: No duplicate customers, consistent foreign key references, each order linked to the correct items.
-* **Why it matters:** Ensures entity relationships remain consistent, and avoids wasting storage on redundant or repeated data.
-
-</details>
-
-<details>
-<summary>2. Historical accuracy ⚠️</summary>
-
-* Fully normalised tables reference **current descriptive data**.
-* Updating `ItemPrice` in the `Items` table changes join results, so past revenues can appear wrong.
-* **Example:** Joining `Orders → OrderLineItems → Items` today gives $1200 for last year’s iPhone, even though it was sold for $1000.
-
-</details>
-
-<details>
-<summary>3. Query efficiency ⚠️</summary>
-
-* Analytical questions often require joining multiple tables.
-* **Example:** To calculate “total revenue by product last year” (assuming historical prices are stored), we need to join `Orders → OrderLineItems → Items` for every row.
-* Large datasets + multiple joins → slower queries and more complex SQL.
-
-</details>
-
-<details>
-<summary>4. Controlled denormalisation</summary>
-
-* To solve these practical issues, systems often **store slowly changing descriptive data directly in transactions**:
-
-  * Example: `sold_price`, `Product category`, `Brand` at time of sale.
-
-* **Benefits:**
-
-  * Preserves historical revenue and product context.
-  * Reduces joins → faster queries.
-  * Simplifies analytics and reporting.
-
-</details>
-
-### Key Takeaways
-
-1. **Normalisation ensures structural correctness.**
-2. **Controlled denormalisation preserves history and improves performance.**
-3. **Good data design balances integrity with practical business needs.**
 
 ## **🏁 Wrap Up (10 Mins)**
 
 1. **Review Objectives:** Did we choose the right database? Did we build an ERD? Did we normalize a table?  
-2. **Homework:** Take a screenshot of an app you use (e.g., Instagram, Spotify) and try to draw the ERD for just one screen.  
+2. **Homework:** [Post-Class](./post-class.md)  
 3. **Next Session Teaser:** "Now that we have our Blueprint, next week we actually start building the house using SQL CREATE and SELECT commands."
 
 
@@ -347,20 +297,7 @@ Understand the trade-offs of full normalisation:
 
   <summary>Click here to view solution</summary>
 
-#### **Activity 2.2.1**
-```dbml
-Table accidents {
-  id int [pk, increment]
-  date datetime
-  location varchar
-  description text
-  
-  car_id int // FK pointing to the car
-}
-Ref: accidents.car_id > cars.id
-```
-
-#### **Activity 3.2.3**
+#### **🟢 Workshop 3.2.3**
 
 ```dbml
 // 1. The "Master" List of Products
