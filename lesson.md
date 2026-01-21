@@ -95,7 +95,7 @@ Prompt: "I am the CEO of a new Startup. I have 4 features I need to build. Tell 
      <summary>Answer: </summary>
      NoSQL. High volume, simple structure.
    </details>
-
+---
 ## **🔵 Section 2: Building the Blueprint (ERD)**
 
 **Goal:** Learn the syntax of relationships using DBML.
@@ -191,138 +191,363 @@ Each entity has the following attributes:
 * Write the DBML to create the ERD.
 * Submit your code in Discord Peer-Review Channel: https://discord.com/channels/1165846570177150996/1457586759667028094
 
-## **🔵 Section 3: Normalization (Cleaning the House)**
+---
+## **🔵 Section 3: Organizing Your Data (Like Tidying Your Home)**
 
-**Goal:** Convert messy data into efficient tables using Normal Forms.
+**Goal:** Learn how to arrange information efficiently so you don't store the same thing multiple times.
 
-> **Interactive Tutorial:** Before diving in, try the [Normalization Interactive Visualization](./visualisation/normalization-interactive.html) to see the concepts in action. Open the HTML file in your browser and step through the 8-step tutorial.
+> **Interactive Tutorial:** Before reading further, try the [Normalization Interactive Visualization](./visualisation/normalization-interactive.html). Open this file in your web browser and follow the 8-step guided tour to see these ideas come to life.
 
-### **3.1 The Narrative**
+### **3.1 Why This Matters: The Coffee Shop Story**
 
-Imagine a spreadsheet where every time you bought a coffee, the store wrote down your full home address next to the coffee price.
+Picture this: You're a regular at a coffee shop. Every time you buy coffee, the cashier writes down your order along with your complete home address on a paper slip.
 
-If you move house, they have to find every coffee you ever bought and update your address.
+Now imagine you move to a new apartment. The coffee shop would need to dig through hundreds of old receipts and update your address on every single one. That's exhausting and error-prone!
 
-This is called an Update Anomaly.
+This problem is called an "Update Anomaly" - when changing one piece of information forces you to update it in many places.
 
-Normalization is the process of splitting tables apart so we store data in exactly one place.
+**Normalization** is like organizing your home: instead of keeping your keys in random places throughout the house, you put them in one designated spot. Similarly, we organize data so each piece of information lives in exactly one place. [freecodecamp](https://www.freecodecamp.org/news/database-normalization-1nf-2nf-3nf-table-examples/)
 
-### **3.2 Concept: The Three Normal Forms**
+***
 
-* **1NF (First Normal Form):** **No Lists.** You cannot have a cell with "Apple, Banana, Pear". Break them into rows.  
-* **2NF (Second Normal Form):** **The Whole Key.** (Mostly relevant for composite keys). Every column must rely on the *entire* unique ID.  
-* **3NF (Third Normal Form):** **No Pass-Throughs.** A column should not depend on another non-key column. (e.g., ItemPrice depends on the Item, not the Order).
+### **3.2 The Three Rules of Good Organization**
 
-### **🟢 Activity 3: The E-Commerce Deconstruction (Group Breakout \- 20 Mins)**
+Think of these as three levels of tidiness. Here's a simple way to remember them: [stackoverflow](https://stackoverflow.com/questions/2331838/normalization-in-plain-english)
 
-#### 3.2.1 First Normal Form (1NF)
+**"Every fact should be about the key, the whole key, and nothing but the key."**
 
-The `OrderDetails` table is in 1NF because each row is unique and each column has a single value.
+Let's break that down with real-world examples:
 
-| OrderID | ItemID | ItemName | ItemPrice | CustomerID | CustomerName | OrderDate  |
-| ------- | ------ | -------- | --------- | ---------- | ------------ | ---------- |
-| 100     | 10     | iPhone   | 1000      | 1          | John         | 2021-01-01 |
-| 100     | 20     | iPad     | 500       | 1          | John         | 2021-01-01 |
-| 200     | 30     | Macbook  | 2000      | 1          | John         | 2021-01-02 |
-| 300     | 10     | iPhone   | 1000      | 2          | Mary         | 2021-01-03 |
-| 300     | 30     | Macbook  | 2000      | 2          | Mary         | 2021-01-03 |
+#### **Rule 1 (1NF): One Item Per Space - "No Grocery Bags in Cells"**
 
-The problem is that now we don’t have a unique primary key. That is, 100 occurs in the `OrderID` column in two different rows.
+**Real-Life Analogy:** Imagine your closet. You wouldn't stuff 3 shirts onto a single hanger and write "blue shirt, red shirt, green shirt" on one label. Each shirt gets its own space. [red-gate](https://www.red-gate.com/blog/normalization-1nf-2nf-3nf)
 
-To create a unique primary (composite) key, let's number the lines in each order by adding a new column called `LineNumber`.
+**The Problem - Before 1NF:**
 
-| OrderID | LineNumber | ItemID | ItemName | ItemPrice | CustomerID | CustomerName | OrderDate  |
-| ------- | ---------- | ------ | -------- | --------- | ---------- | ------------ | ---------- |
-| 100     | 1          | 10     | iPhone   | 1000      | 1          | John         | 2021-01-01 |
-| 100     | 2          | 20     | iPad     | 500       | 1          | John         | 2021-01-01 |
-| 200     | 1          | 30     | Macbook  | 2000      | 1          | John         | 2021-01-02 |
-| 300     | 1          | 10     | iPhone   | 1000      | 2          | Mary         | 2021-01-03 |
-| 300     | 2          | 30     | Macbook  | 2000      | 2          | Mary         | 2021-01-03 |
+Your shopping list looks like this:
 
-Now we have a unique primary key, which is the combination of `OrderID` and `LineNumber`.
+| Person | Favorite Fruits |
+|--------|----------------|
+| Sarah  | Apple, Banana, Orange |
+| Mike   | Grape, Mango |
 
-#### 3.2.2 Second Normal Form (2NF)
+**What's wrong?** The "Favorite Fruits" cell contains multiple values crammed together. If you want to count how many people like apples, you'd have to split apart that cell manually.
 
-To reach 2NF, we need to remove partial dependencies. A partial dependency is when one or more columns in a table depend on a subset of the primary key, but not on the whole primary key; it can only occur only when the _primary key is composite_.
+**The Solution - After 1NF:**
 
-In this case, the last three columns (`CustomerID`, `CustomerName`, `OrderDate`) depend on only part of the primary key (`OrderID`). They do not depend on the `LineNumber` column.
+| Person | Favorite Fruit |
+|--------|---------------|
+| Sarah  | Apple |
+| Sarah  | Banana |
+| Sarah  | Orange |
+| Mike   | Grape |
+| Mike   | Mango |
 
-To fix this, we need to split the table into two tables: `Orders` and `OrderLineItems`.
+**Why it's better:** Now each cell contains exactly one piece of information. You can easily search, count, and organize. [digitalocean](https://www.digitalocean.com/community/tutorials/database-normalization)
 
-`Orders` table:
+***
 
-| OrderID | CustomerID | CustomerName | OrderDate  |
-| ------- | ---------- | ------------ | ---------- |
-| 100     | 1          | John         | 2021-01-01 |
-| 200     | 1          | John         | 2021-01-02 |
-| 300     | 2          | Mary         | 2021-01-03 |
+#### **Rule 2 (2NF): Everything Relates to the Complete ID - "The Address Book Rule"**
 
-`OrderLineItems` table:
+**Real-Life Analogy:** Think of an address book. You wouldn't write someone's home address next to each phone call you made to them. The address belongs with the person's name, not with individual calls. [datacamp](https://www.datacamp.com/tutorial/normalization-in-sql)
+
+**The Problem - Before 2NF:**
+
+Imagine a library tracking who borrowed which books:
+
+| Student ID | Student Name | Book ID | Book Title | Borrow Date |
+|-----------|-------------|---------|-----------|-------------|
+| 001 | Alice | B10 | Harry Potter | 2026-01-10 |
+| 001 | Alice | B20 | Hobbit | 2026-01-12 |
+| 002 | Bob | B10 | Harry Potter | 2026-01-11 |
+
+**What's wrong?** Alice's name appears twice. If Alice changes her name (marriage, legal change), you'd have to update multiple rows. Also, "Book Title" really depends on "Book ID," not on the specific borrowing transaction.
+
+**The Solution - After 2NF:**
+
+Split into three tables:
+
+**Students Table:**
+| Student ID | Student Name |
+|-----------|-------------|
+| 001 | Alice |
+| 002 | Bob |
+
+**Books Table:**
+| Book ID | Book Title |
+|---------|-----------|
+| B10 | Harry Potter |
+| B20 | Hobbit |
+
+**Borrowing Records:**
+| Student ID | Book ID | Borrow Date |
+|-----------|---------|-------------|
+| 001 | B10 | 2026-01-10 |
+| 001 | B20 | 2026-01-12 |
+| 002 | B10 | 2026-01-11 |
+
+**Why it's better:** Student information lives in one place, book information lives in one place. Each piece of information connects to its complete identifier. [guides.visual-paradigm](https://guides.visual-paradigm.com/a-comprehensive-guide-to-database-normalization-with-examples/)
+
+***
+
+#### **Rule 3 (3NF): No Chain Dependencies - "The Phone Directory Principle"**
+
+**Real-Life Analogy:** In a phone directory, you look up a person's name to get their phone number. You don't look up their phone number to find their city, then use the city to find their zip code. That's a "chain" - one thing leading to another. [freecodecamp](https://www.freecodecamp.org/news/database-normalization-1nf-2nf-3nf-table-examples/)
+
+**The Problem - Before 3NF:**
+
+Your employee database looks like this:
+
+| Employee ID | Employee Name | Department Code | Department Name | Department Manager |
+|------------|--------------|-----------------|-----------------|-------------------|
+| E001 | Alice | D10 | Sales | John Smith |
+| E002 | Bob | D10 | Sales | John Smith |
+| E003 | Carol | D20 | Marketing | Jane Doe |
+
+**What's wrong?** "Department Name" and "Department Manager" don't really depend on the employee. They depend on the "Department Code." If the Sales manager changes from John Smith to Mary Johnson, you'd have to update every sales employee's row. [digitalocean](https://www.digitalocean.com/community/tutorials/database-normalization)
+
+**Visual representation of the dependency chain:**
+```
+Employee ID → Department Code → Department Name
+Employee ID → Department Code → Department Manager
+```
+
+This is called a "transitive dependency" - information depending on something that depends on something else. [datacamp](https://www.datacamp.com/tutorial/normalization-in-sql)
+
+**The Solution - After 3NF:**
+
+Split into two tables:
+
+**Employees Table:**
+| Employee ID | Employee Name | Department Code |
+|------------|--------------|-----------------|
+| E001 | Alice | D10 |
+| E002 | Bob | D10 |
+| E003 | Carol | D20 |
+
+**Departments Table:**
+| Department Code | Department Name | Department Manager |
+|-----------------|-----------------|-------------------|
+| D10 | Sales | John Smith |
+| D20 | Marketing | Jane Doe |
+
+**Why it's better:** When the Sales manager changes, you update ONE cell in the Departments table. All employees automatically reflect this change when you look up their department. [freecodecamp](https://www.freecodecamp.org/news/database-normalization-1nf-2nf-3nf-table-examples/)
+
+***
+
+### **🟢 Activity 3: The E-Commerce Deconstruction (Group Breakout - 20 Mins)**
+
+Let's practice with a real online store example, going through all three rules step by step.
+
+#### **Starting Point: The Messy Spreadsheet**
+
+Imagine you're running an online store and currently track everything in one big table:
+
+| OrderID | ItemID | ItemName | ItemPrice | CustomerID | CustomerName | OrderDate |
+|---------|--------|----------|-----------|-----------|-------------|-----------|
+| 100 | 10 | iPhone | 1000 | 1 | John | 2021-01-01 |
+| 100 | 20 | iPad | 500 | 1 | John | 2021-01-01 |
+| 200 | 30 | Macbook | 2000 | 1 | John | 2021-01-02 |
+| 300 | 10 | iPhone | 1000 | 2 | Mary | 2021-01-03 |
+| 300 | 30 | Macbook | 2000 | 2 | Mary | 2021-01-03 |
+
+***
+
+#### **Step 1: Applying Rule 1 (1NF) - Making Each Row Unique**
+
+**The Problem:** Look at OrderID 100 - it appears in two rows (iPhone and iPad). Which row is "the order"? Both? This is confusing!
+
+**Think of it like a receipt:** When you get a store receipt, it has ONE receipt number at the top, but multiple line items below. Each line item needs its own identifier.
+
+**The Solution:** Add a line number to create a unique identifier for each row:
+
+| OrderID | LineNumber | ItemID | ItemName | ItemPrice | CustomerID | CustomerName | OrderDate |
+|---------|-----------|--------|----------|-----------|-----------|-------------|-----------|
+| 100 | 1 | 10 | iPhone | 1000 | 1 | John | 2021-01-01 |
+| 100 | 2 | 20 | iPad | 500 | 1 | John | 2021-01-01 |
+| 200 | 1 | 30 | Macbook | 2000 | 1 | John | 2021-01-02 |
+| 300 | 1 | 10 | iPhone | 1000 | 2 | Mary | 2021-01-03 |
+| 300 | 2 | 30 | Macbook | 2000 | 2 | Mary | 2021-01-03 |
+
+**Key Insight:** Now each row has a unique two-part ID: (OrderID + LineNumber). Just like "Building A, Apartment 301" uniquely identifies a location.
+
+✅ **Rule 1 Complete!** Each row is now uniquely identifiable.
+
+***
+
+#### **Step 2: Applying Rule 2 (2NF) - Separating Order Info from Item Info**
+
+**The Problem:** Look at John's information (CustomerID, CustomerName, OrderDate). Does this change between line items? No! Whether John bought an iPhone (line 1) or an iPad (line 2), he's still John, and the order date is still 2021-01-01.
+
+**Visual Diagram - What depends on what:**
+
+```
+(OrderID + LineNumber) → ItemID, ItemName, ItemPrice ✓ (Needs both parts)
+OrderID only → CustomerID, CustomerName, OrderDate ✓ (Doesn't need LineNumber)
+```
+
+The customer information only cares about OrderID, not LineNumber. This violates Rule 2. [digitalocean](https://www.digitalocean.com/community/tutorials/database-normalization)
+
+**The Solution:** Split into two tables based on what the information really describes:
+
+**Orders Table** (one row per order):
+
+| OrderID | CustomerID | CustomerName | OrderDate |
+|---------|-----------|-------------|-----------|
+| 100 | 1 | John | 2021-01-01 |
+| 200 | 1 | John | 2021-01-02 |
+| 300 | 2 | Mary | 2021-01-03 |
+
+**Order Line Items Table** (one row per item in an order):
 
 | OrderID | LineNumber | ItemID | ItemName | ItemPrice |
-| ------- | ---------- | ------ | -------- | --------- |
-| 100     | 1          | 10     | iPhone   | 1000      |
-| 100     | 2          | 20     | iPad     | 500       |
-| 200     | 1          | 30     | Macbook  | 2000      |
-| 300     | 1          | 10     | iPhone   | 1000      |
-| 300     | 2          | 30     | Macbook  | 2000      |
+|---------|-----------|--------|----------|-----------|
+| 100 | 1 | 10 | iPhone | 1000 |
+| 100 | 2 | 20 | iPad | 500 |
+| 200 | 1 | 30 | Macbook | 2000 |
+| 300 | 1 | 10 | iPhone | 1000 |
+| 300 | 2 | 30 | Macbook | 2000 |
 
-#### 3.2.3 Third Normal Form (3NF)
+**Real-World Comparison:**
+- **Orders Table** = The envelope with order details
+- **Order Line Items Table** = The itemized list inside the envelope
 
-We have a messy table called `OrderLineItems`. It violates 3NF because `ItemName` and `ItemPrice` depend on `ItemID`, not on the specific order. This is a transitive dependency. A transitive dependency is when one or more columns in a table depend on a non-key column in that table.
+✅ **Rule 2 Complete!** John's name now appears only once per order, not once per item.
 
-### **🟢 Workshop 3.2.3: Let's break `OrderLineItems` into two tables: `OrderLineItems` and `Items`.**
+***
 
-> Using [dbdiagram.io](https://dbdiagram.io/d), learners decompose this into two clean tables: OrderLineItems and Items.
+#### **Step 3: Applying Rule 3 (3NF) - Creating a Product Catalog**
 
-* Write the DBML to create the ERD.
-* Submit your code in Discord Peer-Review Channel: https://discord.com/channels/1165846570177150996/1457586759667028094
+**The Problem:** Look at the iPhone - it appears in Order 100 and Order 300, both times with ItemName "iPhone" and ItemPrice 1000. That's duplicate information!
 
+**Ask yourself:** Does the iPhone's name and price depend on which specific order purchased it? No! An iPhone is an iPhone regardless of who buys it. [freecodecamp](https://www.freecodecamp.org/news/database-normalization-1nf-2nf-3nf-table-examples/)
 
-### **3.3 Synthesis & Discussion**
+**Visual Diagram - The Chain Dependency:**
 
-* **Instructor:** "In our solution, if the price of the iPhone goes up to $1200 next year, does the old order history change?"  
-* **Learner Goal:** Realize that while Normalization is good, sometimes we *denormalize* (copy data) like sold\_price to preserve historical accuracy.
-* [More in Post-Class](./post-class.md)
-
-
-## **🏁 Wrap Up (10 Mins)**
-
-1. **Review Objectives:** Did we choose the right database? Did we build an ERD? Did we normalize a table?  
-2. **Homework:** [Post-Class](./post-class.md)  
-3. **Next Session Teaser:** "Now that we have our Blueprint, next week we actually start building the house using SQL CREATE and SELECT commands."
-
-
-### **Solution**
-
-<details>
-
-  <summary>Click here to view solution</summary>
-
-#### **🟢 Workshop 3.2.3**
-
-```dbml
-// 1. The "Master" List of Products
-// Information here only changes if the Product itself changes.
-Table items {
-  item_id int [pk]      // The Key
-  item_name varchar     // Depends on item_id
-  current_price int     // Depends on item_id
-}
-// 2. The Transaction List
-// Information here is about the specific event of buying.
-Table order_line_items {
-  order_id int
-  line_number int
-  
-  // Link to the item
-  item_id int 
-  
-  // NOTE: We might keep 'sold_price' here to freeze the history!
-  // This is a great discussion point for advanced learners.
-  sold_price int 
-}
-
-Ref: order_line_items.item_id > items.item_id
 ```
-</details>
+(OrderID + LineNumber) → ItemID → ItemName, ItemPrice
+                         ↑         ↑
+                         |         |
+                    This is the chain we need to break!
+```
+
+ItemName and ItemPrice depend on ItemID, not on the specific order. This is a "transitive dependency". [datacamp](https://www.datacamp.com/tutorial/normalization-in-sql)
+
+**The Solution:** Create a separate Products catalog:
+
+**Products Table** (one row per product):
+
+| ItemID | ItemName | ItemPrice |
+|--------|----------|-----------|
+| 10 | iPhone | 1000 |
+| 20 | iPad | 500 |
+| 30 | Macbook | 2000 |
+
+**Simplified Order Line Items Table:**
+
+| OrderID | LineNumber | ItemID |
+|---------|-----------|--------|
+| 100 | 1 | 10 |
+| 100 | 2 | 20 |
+| 200 | 1 | 30 |
+| 300 | 1 | 10 |
+| 300 | 2 | 30 |
+
+**Real-World Comparison:**
+- **Products Table** = Your store's product catalog
+- **Order Line Items** = References pointing to items in the catalog
+
+**The Big Win:** If the iPhone price changes to $1,200, you update ONE cell in the Products table. Every query that asks "What's the current price of an iPhone?" automatically gets the new price.
+
+✅ **Rule 3 Complete!** No more chain dependencies!
+
+***
+
+### **📊 Visual Summary: Before and After**
+
+**BEFORE NORMALIZATION:**
+```
+One Big Messy Table (25 rows for 5 orders × 5 details)
+❌ John's name repeated 3 times
+❌ iPhone details repeated 2 times
+❌ Must update multiple places when anything changes
+```
+
+**AFTER NORMALIZATION (1NF → 2NF → 3NF):**
+```
+Orders Table: 3 rows
+Order Line Items: 5 rows
+Products Table: 3 rows
+Total: 11 rows (less than half!)
+
+✅ Each fact stored exactly once
+✅ Easy to update anything anywhere
+✅ No contradictions possible
+```
+
+***
+
+### **🟢 Workshop 3.2.3: Your Turn to Practice**
+
+**Your Assignment:**
+
+Visit [dbdiagram.io](https://dbdiagram.io/d) and create a visual diagram showing how these three tables connect to each other. Here's what to show:
+
+1. Draw three boxes (one for Orders, one for Order Line Items, one for Products)
+2. Show lines connecting them (Orders → Order Line Items → Products)
+3. Mark which columns are IDs that link the tables together
+
+**Hint:** The connecting lines represent "relationships" - like "Each Order has many Line Items" and "Each Line Item refers to one Product."
+
+Share your diagram in Discord: [https://discord.com/channels/1165846570177150996/1457586759667028094](https://discord.com/channels/1165846570177150996/1457586759667028094)
+
+***
+
+### **3.3 Group Discussion: When Breaking Rules Makes Sense**
+
+**Scenario:** Your normalized database is working beautifully. Products are stored once, orders reference them cleanly.
+
+**Question:** "In our cleaned-up design, if the iPhone price increases to $1,200 next year, what happens to Mary's order from 2021?"
+
+**Think about it:**
+- In our normalized design, there's ONE iPhone price in the Products table
+- Mary ordered in 2021 when the price was $1,000
+- If we update the price to $1,200, does Mary's historical order suddenly show $1,200?
+
+**The Answer:** Yes, it would! And that's **wrong** for accounting purposes. [stackoverflow](https://stackoverflow.com/questions/2331838/normalization-in-plain-english)
+
+**The Solution - Intentional Denormalization:**
+
+Add a "sold_price" column to Order Line Items:
+
+| OrderID | LineNumber | ItemID | **Sold_Price** |
+|---------|-----------|--------|---------------|
+| 100 | 1 | 10 | **1000** |
+| 300 | 1 | 10 | **1000** |
+
+This way:
+- **Products Table** shows the current price ($1,200)
+- **Order history** preserves what was actually paid ($1,000)
+
+**Real-Life Analogy:** This is like keeping old receipts. Even if a store raises prices today, your receipt from last year still shows what you paid back then. The store needs both: current prices (for new sales) and historical prices (for accounting records). [digitalocean](https://www.digitalocean.com/community/tutorials/database-normalization)
+
+**Key Lesson:** Normalization is a powerful tool, but sometimes you intentionally keep duplicate data for good business reasons. This is called "denormalization," and it's a conscious design choice, not a mistake.
+
+***
+
+### **🎯 Quick Reference Card**
+
+Print this and keep it handy:
+
+| Rule | Remember It As | Ask Yourself |
+|------|---------------|--------------|
+| **1NF** | One item per space | Are there any cells with lists or multiple values? |
+| **2NF** | The whole key | Does every column need the ENTIRE ID to make sense? |
+| **3NF** | Nothing but the key | Does any column depend on another regular column? |
+
+**The Golden Question:** "If I change this piece of information, how many places do I need to update?"
+- **Many places?** You probably need more normalization.
+- **One place?** You're doing it right! [stackoverflow](https://stackoverflow.com/questions/2331838/normalization-in-plain-english)
+
+***
+
