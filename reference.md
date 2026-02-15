@@ -21,3 +21,12 @@
 * \[Video\] **"Database Design Course \- Learn how to design and plan a database"** (FreeCodeCamp on YouTube) \- *Watch the first 10 mins.*  https://www.youtube.com/watch?v=ztHopE5Wnpc
 * \[Read\] **"What is a Relational Database?"** (Oracle/AWS definitions). https://aws.amazon.com/rds/what-is-a-relational-database/
 
+### Additional materials
+dbml 
+https://docs.google.com/document/d/12QL_dowDnDG7WdgVM5cEsp3NuHQB7SlvSA2sG-eESKw/edit?usp=drive_link
+Normalization
+https://docs.google.com/document/d/1BJKIeqDftk295dWEVuGfwe3Gw-9RlmTJcFB88Gh73RU/edit?usp=drive_link
+ACID
+https://docs.google.com/document/d/1egVeK3KBOjUs6FKbmPMIKObRPrlp1e1UMlWECSW94ok/edit?usp=drive_link
+
+
